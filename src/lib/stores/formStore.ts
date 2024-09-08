@@ -1,6 +1,6 @@
 import {
+  type FormComponent,
   type FormData,
-  type FormInput,
 } from "$lib/form-components/FormComponentType";
 import { writable } from "svelte/store";
 
@@ -8,7 +8,7 @@ function createFormStore() {
   const { subscribe, set, update } = writable<FormData>({
     formName: "New Form",
     logo: null,
-    formInputs: [],
+    formComponents: [],
   });
 
   return {
@@ -18,36 +18,38 @@ function createFormStore() {
     updateFormName: (newFormName: string) => {
       update((form) => ({ ...form, formName: newFormName }));
     },
-    addFormInput: (formInput: FormInput) => {
+    addFormComponent: (formComponent: FormComponent) => {
       update((form) => ({
         ...form,
-        formInputs: [...form.formInputs, formInput],
+        formComponents: [...form.formComponents, formComponent],
       }));
     },
-    removeFormInput: (index: number) => {
+    removeFormComponent: (index: number) => {
       update((form) => ({
         ...form,
-        formInputs: form.formInputs.filter((_, i) => i !== index),
+        formComponents: form.formComponents.filter((_, i) => i !== index),
       }));
     },
-    moveFormInput: (fromIndex: number, toIndex: number) => {
+    moveFormComponent: (fromIndex: number, toIndex: number) => {
       update((form) => {
-        const fromItem = form.formInputs[fromIndex];
-        form.formInputs = form.formInputs.filter((_, i) => i !== fromIndex);
+        const fromItem = form.formComponents[fromIndex];
+        form.formComponents = form.formComponents.filter(
+          (_, i) => i !== fromIndex
+        );
 
-        const newFormInputList = [
-          ...form.formInputs.slice(0, toIndex),
+        const newFormComponentsList = [
+          ...form.formComponents.slice(0, toIndex),
           fromItem,
-          ...form.formInputs.slice(toIndex),
+          ...form.formComponents.slice(toIndex),
         ];
 
-        newFormInputList.forEach((input, index) => {
+        newFormComponentsList.forEach((input, index) => {
           input.index = index;
         });
 
         return {
           ...form,
-          formInputs: newFormInputList,
+          formComponents: newFormComponentsList,
         };
       });
     },

@@ -2,8 +2,7 @@
   import FormComponentListTile from "$lib/custom-components/FormComponentListTile/FormComponentListTile.svelte";
   import { formStore } from "$lib/stores/formStore";
   import { Checkbox, TextInput } from "carbon-components-svelte";
-  import { FormInputTypes } from "../../form-components/FormComponentType";
-  import EmailInput from "./EmailInput.svelte";
+  import { FormComponentType } from "../../form-components/FormComponentType";
 
   let label = "";
   let placeholder = "";
@@ -12,11 +11,10 @@
   let labelInvalid = false;
 
   function addComponent(): boolean {
-    formStore.addFormInput({
+    formStore.addFormComponent({
       id: crypto.randomUUID(),
-      index: $formStore.formInputs.length,
-      type: FormInputTypes.EMAIL_INPUT,
-      component: EmailInput,
+      index: $formStore.formComponents.length,
+      type: FormComponentType.EMAIL_INPUT,
       settings: { label, placeholder, isRequired },
     });
 
