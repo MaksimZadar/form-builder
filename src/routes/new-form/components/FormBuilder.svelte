@@ -1,12 +1,8 @@
 <script lang="ts">
-  import {
-    FormComponentTypesEnum,
-    type FormComponent,
-  } from "$lib/form-components/FormComponentType";
-  import SimpleInput from "$lib/form-components/SimpleInput/SimpleInput.svelte";
+  import { type FormComponent } from "$lib/form-components/FormComponentType";
   import { formStore } from "$lib/stores/formStore";
   import { Button } from "carbon-components-svelte";
-  import { Add, Draggable, TrashCan } from "carbon-icons-svelte";
+  import { Draggable, TrashCan } from "carbon-icons-svelte";
   import { flip } from "svelte/animate";
   import DropSection from "./DropSection.svelte";
 
@@ -16,17 +12,23 @@
 
   let isDragging = false;
   let dragIndex: number | null = null;
+  let formLogo: string | null = null;
+
+  formStore.subscribe((form) => {
+    if (form.logo) {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(form.logo);
+      fileReader.onload = (fileReaderEvent) => {
+        if (fileReaderEvent.target && fileReaderEvent.target.result) {
+          var res = fileReaderEvent.target.result;
+          formLogo = res.toString();
+        }
+      };
+    }
+  });
 
   function removeComponent(index: number) {
     formStore.removeFormComponent(index);
-  }
-
-  function addComponent() {
-    formStore.addFormComponent({
-      type: FormComponentTypesEnum.SIMPLE_INPUT,
-      component: SimpleInput,
-      props: { label: "Email", placeholder: "Enter your email" },
-    });
   }
 
   function dragStart(itemIndex: number) {
@@ -50,7 +52,16 @@
 </script>
 
 <div class="w-full flex flex-col h-full">
-  <h1 class="text-4xl">{$formStore.formName}</h1>
+  <div class="w-full flex items-center justify-between">
+    <h1 class="text-4xl flex-grow">{$formStore.formName}</h1>
+    {#if $formStore.logo}
+      <img
+        alt="logo"
+        class="flex-shrink overflow-hidden max-h-14"
+        src={formLogo}
+      />
+    {/if}
+  </div>
   <div
     class="flex flex-col justify-start items-center h-full overflow-hidden overflow-y-auto mt-4 p-4 gap-2 bg-slate-200"
   >
@@ -94,12 +105,5 @@
         {/if}
       </div>
     {/each}
-    <Button
-      iconDescription="Add component"
-      icon={Add}
-      kind="tertiary"
-      class="transition-all"
-      on:click={() => addComponent()}
-    />
   </div>
 </div>
