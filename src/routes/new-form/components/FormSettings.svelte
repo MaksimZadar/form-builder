@@ -1,29 +1,32 @@
 <script lang="ts">
+  import MyAccordion from "$lib/custom-components/Accordion/MyAccordion.svelte";
+  import MyAccordionItem from "$lib/custom-components/Accordion/MyAccordionItem.svelte";
   import { formStore } from "$lib/stores/formStore";
-  import { TextInput } from "carbon-components-svelte";
+  import { Button, TextInput } from "carbon-components-svelte";
+  import FormInputsList from "./FormInputsList.svelte";
 </script>
 
 <div class="h-full w-96 border-r border-solid border-slate-500 flex flex-col">
-  <div
-    id="heading"
-    class="flex flex-row p-4 border-b border-solid border-slate-500 justify-between w-full items-center"
-  >
-    <h2 class="text-2xl flex-grow">Form Settings</h2>
-    <!-- <Toggle
-      class="flex-shrink justify-center align-middle items-center"
-      labelA="Light"
-      labelB="Dark"
-      toggled={$themeStore !== "white"}
-      on:toggle={() => themeStore.toggle()}
-    /> -->
-  </div>
-  <div id="settings" class="flex flex-col p-4 w-full">
-    <TextInput
-      labelText="Form Name"
-      value={$formStore.formName}
-      on:input={(e) => {
-        formStore.updateFormName(e.detail?.toString() ?? "");
-      }}
-    />
-  </div>
+  <MyAccordion>
+    <MyAccordionItem open title="Form Settings">
+      <div class="w-full p-2 flex flex-col">
+        <TextInput
+          labelText="Form Name"
+          value={$formStore.formName}
+          on:input={(e) => {
+            formStore.updateFormName(e.detail?.toString() ?? "");
+          }}
+        />
+        <div class="flex flex-row w-full pt-4">
+          <Button kind="primary">Save</Button>
+          <Button kind="secondary">Preview</Button>
+        </div>
+      </div>
+    </MyAccordionItem>
+    <MyAccordionItem title="Form Components" class="h-96">
+      <div class="w-full h-full p-2 overflow-hidden overflow-y-auto flex-grow">
+        <FormInputsList />
+      </div>
+    </MyAccordionItem>
+  </MyAccordion>
 </div>
