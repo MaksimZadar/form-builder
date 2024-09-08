@@ -4,6 +4,7 @@
   import { formStore } from "$lib/stores/formStore";
   import { Button, FileUploader, TextInput } from "carbon-components-svelte";
   import FormInputsList from "./FormInputsList.svelte";
+  import FormSectionsList from "./FormSectionsList.svelte";
 
   let files: File[] = $formStore.logo ? [$formStore.logo] : [];
 </script>
@@ -35,9 +36,14 @@
         </div>
       </div>
     </MyAccordionItem>
-    <MyAccordionItem title="Form Components" class="h-96">
+    <MyAccordionItem title="Form Inputs" class="max-h-96">
       <div class="w-full h-full p-2 overflow-hidden overflow-y-auto flex-grow">
         <FormInputsList />
+      </div>
+    </MyAccordionItem>
+    <MyAccordionItem title="Form Sections" class="max-h-96">
+      <div class="w-full h-full p-2 overflow-hidden overflow-y-auto flex-grow">
+        <FormSectionsList />
       </div>
     </MyAccordionItem>
   </MyAccordion>
