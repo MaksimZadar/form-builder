@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { fade } from "svelte/transition";
+  import { slide } from "svelte/transition";
 
   export let index: number;
   export let drop: (
@@ -14,7 +14,7 @@
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-  transition:fade={{ duration: 400 }}
+  transition:slide={{ duration: 400, axis: "y" }}
   on:dragenter={(event) => {
     event.preventDefault();
     hoveredOver = true;
@@ -25,6 +25,7 @@
   }}
   on:dragleave={() => (hoveredOver = false)}
   on:drop={(event) => drop(event, index)}
-  class="w-full h-1 bg-slate-500 transition-all my-2"
-  class:h-5={hoveredOver}
-></div>
+  class="w-full p-2 bg-slate-300 transition-all mb-2 text-center"
+>
+  <span>Add to section</span>
+</div>

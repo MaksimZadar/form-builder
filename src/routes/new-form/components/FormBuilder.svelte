@@ -1,14 +1,21 @@
 <script lang="ts">
-  import type { FormInput } from "$lib/form-components/FormComponentType";
+  import BasicSection from "$lib/form-components/BasicSection/BasicSection.svelte";
+  import {
+    FormComponentType,
+    type FormComponent,
+  } from "$lib/form-components/FormComponentType";
+  import EmailInput from "$lib/form-inputs/EmailInput/EmailInput.svelte";
+  import PlainTextInput from "$lib/form-inputs/PlainTextInput/PlainTextInput.svelte";
   import { formStore } from "$lib/stores/formStore";
   import { Button } from "carbon-components-svelte";
   import { Draggable, TrashCan } from "carbon-icons-svelte";
   import { flip } from "svelte/animate";
+  import DropIntoSection from "./DropIntoSection.svelte";
   import DropSection from "./DropSection.svelte";
 
-  let formInputsList: FormInput[];
+  let formComponentList: FormComponent[] = [];
 
-  $: formInputsList = $formStore.formInputs;
+  $: formComponentList = $formStore.formComponents;
 
   let isDragging = false;
   let fromIndex: number | null = null;
@@ -28,7 +35,7 @@
   });
 
   function removeComponent(index: number) {
-    formStore.removeFormInput(index);
+    formStore.removeFormComponent(index);
   }
 
   function dragStart(itemIndex: number) {
@@ -43,11 +50,66 @@
     event.preventDefault();
 
     if (fromIndex !== null) {
-      formStore.moveFormInput(fromIndex, toIndex);
+      formStore.moveFormComponent(fromIndex, toIndex);
     }
 
     isDragging = false;
     fromIndex = null;
+  }
+
+  function getFormComponentByType(
+    componentType: FormComponentType
+  ): ConstructorOfATypedSvelteComponent | null {
+    switch (componentType) {
+      case FormComponentType.BASIC_SECTION:
+        return BasicSection;
+      case FormComponentType.SIMPLE_INPUT:
+        return PlainTextInput;
+      case FormComponentType.EMAIL_INPUT:
+        return EmailInput;
+      default:
+        return null;
+    }
+  }
+
+  function isComponentASection(componentType: FormComponentType) {
+    switch (componentType) {
+      case FormComponentType.BASIC_SECTION:
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  function isComponentInSection(section: FormComponent, fromIndex: number) {
+    let draggedComponent = formComponentList[fromIndex];
+    if (
+      draggedComponent.sectionId &&
+      draggedComponent.sectionId === section.id
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  function isComponentItsOwnSection(
+    formComponent: FormComponent,
+    fromIndex: number
+  ): boolean {
+    let draggedComponent = formComponentList[fromIndex];
+    return formComponent.id === draggedComponent.id;
+  }
+
+  function canAddToSection(section: FormComponent, fromIndex: number) {
+    var draggedComponent = formComponentList[fromIndex];
+    if (isComponentASection(draggedComponent.type)) {
+      return false;
+    }
+    return (
+      !isComponentInSection(section, fromIndex) &&
+      !isComponentItsOwnSection(section, fromIndex)
+    );
   }
 </script>
 
@@ -65,7 +127,7 @@
   <div
     class="flex flex-col justify-start items-center h-full overflow-hidden overflow-y-auto mt-4 p-4 gap-2 bg-slate-200"
   >
-    {#each formInputsList as formInputs, index (formInputs.id)}
+    {#each formComponentList as formComponent, index (formComponent.id)}
       <div animate:flip={{ duration: 400 }} class="w-full">
         {#if isDragging && fromIndex !== null && fromIndex > index}
           <DropSection {index} drop={(event) => drop(event, index)} />
@@ -73,7 +135,6 @@
         <!-- svelte-ignore a11y-no-static-element-interactions -->
         <div
           class="w-full flex flex-row align-middle items-end border border-black"
-          class:my-2={isDragging}
           draggable="true"
           aria-grabbed="false"
           on:dragstart={() => dragStart(index)}
@@ -88,8 +149,8 @@
             class="cursor-grab"
           />
           <svelte:component
-            this={formInputs.component}
-            {...formInputs.settings}
+            this={getFormComponentByType(formComponent.type)}
+            {...formComponent.settings}
           />
           <Button
             iconDescription="Remove component"
@@ -100,6 +161,9 @@
             on:click={() => removeComponent(index)}
           />
         </div>
+        {#if isDragging && fromIndex !== null && isComponentASection(formComponent.type) && canAddToSection(formComponent, fromIndex)}
+          <DropIntoSection {index} drop={(event) => drop(event, index)} />
+        {/if}
         {#if isDragging && fromIndex !== null && fromIndex < index}
           <DropSection {index} drop={(event) => drop(event, index)} />
         {/if}
