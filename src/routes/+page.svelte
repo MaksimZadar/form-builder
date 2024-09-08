@@ -1,6 +1,16 @@
 <script lang="ts">
-    import "carbon-components-svelte/css/all.css";
+  import { Button, Column, Grid, Row } from "carbon-components-svelte";
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<Grid>
+  <Row class="py-4">
+    <Column>
+      <h1 class="text-4xl">Form Builder Demo</h1>
+    </Column>
+  </Row>
+  <Row>
+    <Column>
+      <Button href="/new-form">New Form</Button>
+    </Column>
+  </Row>
+</Grid>
