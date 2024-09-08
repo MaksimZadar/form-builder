@@ -9,6 +9,10 @@
   function toggleOpen() {
     open = !open;
   }
+
+  $: classes = open
+    ? "h-full p-2 border-b border-solid border-slate-400"
+    : "h-0 p-0";
 </script>
 
 <div class={`w-full flex flex-col ${external_class}`}>
@@ -24,14 +28,7 @@
       <ChevronDown size={16} />
     {/if}
   </button>
-  <div
-    id="content"
-    class:h-0={!open}
-    class:h-full={open}
-    class:p-2={open}
-    class:p-0={!open}
-    class="w-full overflow-hidden transition"
-  >
+  <div id="content" class={`w-full overflow-hidden transition ${classes}`}>
     <slot />
   </div>
 </div>
