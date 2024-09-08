@@ -13,6 +13,8 @@
 
   function addComponent(): boolean {
     formStore.addFormInput({
+      id: crypto.randomUUID(),
+      index: $formStore.formInputs.length,
       type: FormInputTypes.SIMPLE_INPUT,
       component: SimpleInput,
       settings: { label, placeholder, isRequired },

@@ -34,13 +34,20 @@ function createFormStore() {
       update((form) => {
         const fromItem = form.formInputs[fromIndex];
         form.formInputs = form.formInputs.filter((_, i) => i !== fromIndex);
+
+        const newFormInputList = [
+          ...form.formInputs.slice(0, toIndex),
+          fromItem,
+          ...form.formInputs.slice(toIndex),
+        ];
+
+        newFormInputList.forEach((input, index) => {
+          input.index = index;
+        });
+
         return {
           ...form,
-          formInputs: [
-            ...form.formInputs.slice(0, toIndex),
-            fromItem,
-            ...form.formInputs.slice(toIndex),
-          ],
+          formInputs: newFormInputList,
         };
       });
     },

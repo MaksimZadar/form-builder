@@ -6,9 +6,9 @@
   import { flip } from "svelte/animate";
   import DropSection from "./DropSection.svelte";
 
-  let formInputs: FormInput[];
+  let formInputsList: FormInput[];
 
-  $: formInputs = $formStore.formInputs;
+  $: formInputsList = $formStore.formInputs;
 
   let isDragging = false;
   let fromIndex: number | null = null;
@@ -65,7 +65,7 @@
   <div
     class="flex flex-col justify-start items-center h-full overflow-hidden overflow-y-auto mt-4 p-4 gap-2 bg-slate-200"
   >
-    {#each formInputs as formInputs, index (formInputs)}
+    {#each formInputsList as formInputs, index (formInputs.id)}
       <div animate:flip={{ duration: 400 }} class="w-full">
         {#if isDragging && fromIndex !== null && fromIndex > index}
           <DropSection {index} drop={(event) => drop(event, index)} />
