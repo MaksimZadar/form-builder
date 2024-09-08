@@ -19,7 +19,7 @@
         />
         <div class="flex flex-row w-full pt-4">
           <Button kind="primary">Save</Button>
-          <Button kind="secondary">Preview</Button>
+          <Button kind="secondary" href="/preview-form">Preview</Button>
         </div>
       </div>
     </MyAccordionItem>
