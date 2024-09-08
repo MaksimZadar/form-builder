@@ -1,5 +1,5 @@
-import EmailInputListTile from "./EmailInput/EmailInputListTile.svelte";
-import SimpleInputListTile from "./SimpleInput/SimpleInputListTile.svelte";
+import PlainTextInputListTile from "$lib/form-inputs/PlainTextInput/PlainTextInputListTile.svelte";
+import EmailInputListTile from "../form-inputs/EmailInput/EmailInputListTile.svelte";
 
 export type FormData = {
   formName: string;
@@ -19,6 +19,6 @@ export type FormComponent = {
 };
 
 export const ComponentSelectionList: ConstructorOfATypedSvelteComponent[] = [
-  SimpleInputListTile,
+  PlainTextInputListTile,
   EmailInputListTile,
 ];

@@ -2,7 +2,7 @@
   import FormComponentListTile from "$lib/custom-components/FormComponentListTile/FormComponentListTile.svelte";
   import { formStore } from "$lib/stores/formStore";
   import { Checkbox, TextInput } from "carbon-components-svelte";
-  import { FormComponentTypesEnum } from "../FormComponentType";
+  import { FormComponentTypesEnum } from "../../form-components/FormComponentType";
   import EmailInput from "./EmailInput.svelte";
 
   let label = "";
