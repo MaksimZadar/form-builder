@@ -3,8 +3,9 @@
 
   export let label;
   export let placeholder;
+  export let isRequired: boolean = false;
 </script>
 
 <div class="w-full">
-  <TextInput labelText={label} {placeholder} />
+  <TextInput labelText={label} {placeholder} required={isRequired} />
 </div>
