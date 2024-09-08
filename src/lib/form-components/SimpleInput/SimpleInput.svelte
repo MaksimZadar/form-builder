@@ -7,5 +7,9 @@
 </script>
 
 <div class="w-full">
-  <TextInput labelText={label} {placeholder} required={isRequired} />
+  <TextInput
+    labelText={`${label}${isRequired ? " *" : ""}`}
+    {placeholder}
+    required={isRequired}
+  />
 </div>

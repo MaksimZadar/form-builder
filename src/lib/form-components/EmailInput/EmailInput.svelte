@@ -9,7 +9,7 @@
 <div class="w-full">
   <TextInput
     type="email"
-    labelText={label}
+    labelText={`${label}${isRequired ? " *" : ""}`}
     {placeholder}
     required={isRequired}
   />
