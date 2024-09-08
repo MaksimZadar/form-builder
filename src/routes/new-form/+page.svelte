@@ -1,5 +1,5 @@
 <script lang="ts">
-  import FormInputsList from "./components/FormInputsList.svelte";
+  import FormBuilder from "./components/FormBuilder.svelte";
   import FormSettings from "./components/FormSettings.svelte";
 </script>
 
@@ -9,7 +9,7 @@
   </div>
   <div class="flex py-4 justify-center flex-grow w-full">
     <div class="w-1/2 h-full">
-      <FormInputsList />
+      <FormBuilder />
     </div>
   </div>
 </div>
