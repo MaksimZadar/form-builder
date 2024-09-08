@@ -7,6 +7,7 @@ import { writable } from "svelte/store";
 function createFormStore() {
   const { subscribe, set, update } = writable<FormData>({
     formName: "New Form",
+    logo: null,
     formComponents: [
       // {
       //   type: FormComponentTypesEnum.SIMPLE_INPUT,
@@ -53,6 +54,9 @@ function createFormStore() {
           ],
         };
       });
+    },
+    updateLogo: (newLogo: File | null) => {
+      update((form) => ({ ...form, logo: newLogo }));
     },
   };
 }
