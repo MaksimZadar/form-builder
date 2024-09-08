@@ -1,6 +1,6 @@
 import {
-  type FormComponent,
   type FormData,
+  type FormInput,
 } from "$lib/form-components/FormComponentType";
 import { writable } from "svelte/store";
 
@@ -8,16 +8,7 @@ function createFormStore() {
   const { subscribe, set, update } = writable<FormData>({
     formName: "New Form",
     logo: null,
-    formComponents: [
-      // {
-      //   type: FormComponentTypesEnum.SIMPLE_INPUT,
-      //   component: SimpleInput,
-      //   props: {
-      //     label: "Name",
-      //     placeholder: "Enter your name",
-      //   },
-      // },
-    ],
+    formInputs: [],
   });
 
   return {
@@ -27,30 +18,28 @@ function createFormStore() {
     updateFormName: (newFormName: string) => {
       update((form) => ({ ...form, formName: newFormName }));
     },
-    addFormComponent: (formComponent: FormComponent) => {
+    addFormInput: (formInput: FormInput) => {
       update((form) => ({
         ...form,
-        formComponents: [...form.formComponents, formComponent],
+        formInputs: [...form.formInputs, formInput],
       }));
     },
-    removeFormComponent: (index: number) => {
+    removeFormInput: (index: number) => {
       update((form) => ({
         ...form,
-        formComponents: form.formComponents.filter((_, i) => i !== index),
+        formInputs: form.formInputs.filter((_, i) => i !== index),
       }));
     },
-    moveFormComponent: (dragIndex: number, index: number) => {
+    moveFormInput: (fromIndex: number, toIndex: number) => {
       update((form) => {
-        const dragItem = form.formComponents[dragIndex];
-        form.formComponents = form.formComponents.filter(
-          (_, i) => i !== dragIndex
-        );
+        const fromItem = form.formInputs[fromIndex];
+        form.formInputs = form.formInputs.filter((_, i) => i !== fromIndex);
         return {
           ...form,
-          formComponents: [
-            ...form.formComponents.slice(0, index),
-            dragItem,
-            ...form.formComponents.slice(index),
+          formInputs: [
+            ...form.formInputs.slice(0, toIndex),
+            fromItem,
+            ...form.formInputs.slice(toIndex),
           ],
         };
       });

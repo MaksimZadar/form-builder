@@ -2,7 +2,7 @@
   import FormComponentListTile from "$lib/custom-components/FormComponentListTile/FormComponentListTile.svelte";
   import { formStore } from "$lib/stores/formStore";
   import { Checkbox, TextInput } from "carbon-components-svelte";
-  import { FormComponentTypesEnum } from "../../form-components/FormComponentType";
+  import { FormInputTypes } from "../../form-components/FormComponentType";
   import EmailInput from "./EmailInput.svelte";
 
   let label = "";
@@ -12,15 +12,10 @@
   let labelInvalid = false;
 
   function addComponent(): boolean {
-    if (!label) {
-      labelInvalid = true;
-      return false;
-    }
-
-    formStore.addFormComponent({
-      type: FormComponentTypesEnum.EMAIL_INPUT,
+    formStore.addFormInput({
+      type: FormInputTypes.EMAIL_INPUT,
       component: EmailInput,
-      props: { label, placeholder, isRequired },
+      settings: { label, placeholder, isRequired },
     });
 
     reset();
@@ -45,8 +40,6 @@
   <form class="w-full flex flex-col gap-2" slot="modal-content">
     <TextInput
       bind:value={label}
-      bind:invalid={labelInvalid}
-      invalidText="Label is required"
       labelText="Label"
       helperText="Label for the field"
       required

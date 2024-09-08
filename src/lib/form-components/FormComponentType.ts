@@ -3,19 +3,20 @@ import EmailInputListTile from "../form-inputs/EmailInput/EmailInputListTile.sve
 
 export type FormData = {
   formName: string;
-  formComponents: FormComponent[];
+  formInputs: FormInput[];
   logo: File | null;
 };
 
-export enum FormComponentTypesEnum {
-  SIMPLE_INPUT = "Plain Text Input",
-  EMAIL_INPUT = "Email Input",
+export enum FormInputTypes {
+  SIMPLE_INPUT,
+  EMAIL_INPUT,
 }
 
-export type FormComponent = {
-  type: FormComponentTypesEnum;
+export type FormInput = {
+  type: FormInputTypes;
   component: ConstructorOfATypedSvelteComponent;
-  props: object;
+  settings: object;
+  sectionId?: string;
 };
 
 export const ComponentSelectionList: ConstructorOfATypedSvelteComponent[] = [

@@ -2,8 +2,8 @@
   import FormComponentListTile from "$lib/custom-components/FormComponentListTile/FormComponentListTile.svelte";
   import { formStore } from "$lib/stores/formStore";
   import { Checkbox, TextInput } from "carbon-components-svelte";
-  import { FormComponentTypesEnum } from "../../form-components/FormComponentType";
-  import PlainTextInput from "./PlainTextInput.svelte";
+  import { FormInputTypes } from "../../form-components/FormComponentType";
+  import SimpleInput from "./PlainTextInput.svelte";
 
   let label = "";
   let placeholder = "";
@@ -12,15 +12,10 @@
   let labelInvalid = false;
 
   function addComponent(): boolean {
-    // if (!label) {
-    //   labelInvalid = true;
-    //   return false;
-    // }
-
-    formStore.addFormComponent({
-      type: FormComponentTypesEnum.SIMPLE_INPUT,
-      component: PlainTextInput,
-      props: { label, placeholder, isRequired },
+    formStore.addFormInput({
+      type: FormInputTypes.SIMPLE_INPUT,
+      component: SimpleInput,
+      settings: { label, placeholder, isRequired },
     });
 
     reset();
@@ -45,7 +40,6 @@
   <div class="w-full flex flex-col gap-2" slot="modal-content">
     <TextInput
       bind:value={label}
-      invalidText="Label is required"
       labelText="Label"
       helperText="Label for the field"
       required

@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { type FormComponent } from "$lib/form-components/FormComponentType";
+  import { type FormInput } from "$lib/form-components/FormComponentType";
   import { formStore } from "$lib/stores/formStore";
 
-  let formComponents: FormComponent[] = [];
+  let formInputs: FormInput[] = [];
 
-  $: formComponents = $formStore.formComponents;
+  $: formInputs = $formStore.formInputs;
   let formLogo: string | null = null;
   formStore.subscribe((form) => {
     if (form.logo) {
@@ -17,6 +17,8 @@
         }
       };
     }
+
+    console.log(form);
   });
 </script>
 
@@ -34,10 +36,10 @@
   <div
     class="flex flex-col justify-start items-center h-full overflow-hidden overflow-y-auto mt-4 p-4 gap-2 bg-slate-200"
   >
-    {#each formComponents as formComponent, index (formComponent)}
+    {#each formInputs as formComponent, index (formComponent)}
       <svelte:component
         this={formComponent.component}
-        {...formComponent.props}
+        {...formComponent.settings}
       />
     {/each}
   </div>

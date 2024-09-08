@@ -1,17 +1,17 @@
 <script lang="ts">
-  import { type FormComponent } from "$lib/form-components/FormComponentType";
+  import type { FormInput } from "$lib/form-components/FormComponentType";
   import { formStore } from "$lib/stores/formStore";
   import { Button } from "carbon-components-svelte";
   import { Draggable, TrashCan } from "carbon-icons-svelte";
   import { flip } from "svelte/animate";
   import DropSection from "./DropSection.svelte";
 
-  let formComponents: FormComponent[] = [];
+  let formInputs: FormInput[];
 
-  $: formComponents = $formStore.formComponents;
+  $: formInputs = $formStore.formInputs;
 
   let isDragging = false;
-  let dragIndex: number | null = null;
+  let fromIndex: number | null = null;
   let formLogo: string | null = null;
 
   formStore.subscribe((form) => {
@@ -28,26 +28,26 @@
   });
 
   function removeComponent(index: number) {
-    formStore.removeFormComponent(index);
+    formStore.removeFormInput(index);
   }
 
   function dragStart(itemIndex: number) {
     isDragging = true;
-    dragIndex = itemIndex;
+    fromIndex = itemIndex;
   }
 
   function drop(
     event: DragEvent & { currentTarget: EventTarget & HTMLDivElement },
-    index: number
+    toIndex: number
   ) {
     event.preventDefault();
 
-    if (dragIndex !== null) {
-      formStore.moveFormComponent(dragIndex, index);
+    if (fromIndex !== null) {
+      formStore.moveFormInput(fromIndex, toIndex);
     }
 
     isDragging = false;
-    dragIndex = null;
+    fromIndex = null;
   }
 </script>
 
@@ -65,9 +65,9 @@
   <div
     class="flex flex-col justify-start items-center h-full overflow-hidden overflow-y-auto mt-4 p-4 gap-2 bg-slate-200"
   >
-    {#each formComponents as formComponent, index (formComponent)}
+    {#each formInputs as formInputs, index (formInputs)}
       <div animate:flip={{ duration: 400 }} class="w-full">
-        {#if isDragging && dragIndex !== null && dragIndex > index}
+        {#if isDragging && fromIndex !== null && fromIndex > index}
           <DropSection {index} drop={(event) => drop(event, index)} />
         {/if}
         <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -88,8 +88,8 @@
             class="cursor-grab"
           />
           <svelte:component
-            this={formComponent.component}
-            {...formComponent.props}
+            this={formInputs.component}
+            {...formInputs.settings}
           />
           <Button
             iconDescription="Remove component"
@@ -100,7 +100,7 @@
             on:click={() => removeComponent(index)}
           />
         </div>
-        {#if isDragging && dragIndex !== null && dragIndex < index}
+        {#if isDragging && fromIndex !== null && fromIndex < index}
           <DropSection {index} drop={(event) => drop(event, index)} />
         {/if}
       </div>
