@@ -1,5 +1,6 @@
 import PlainTextInputListTile from "$lib/form-inputs/PlainTextInput/PlainTextInputListTile.svelte";
 import EmailInputListTile from "../form-inputs/EmailInput/EmailInputListTile.svelte";
+import BasicSectionSelectionTile from "./BasicSection/BasicSectionSelectionTile.svelte";
 
 export type FormData = {
   formName: string;
@@ -10,6 +11,7 @@ export type FormData = {
 export enum FormComponentType {
   SIMPLE_INPUT,
   EMAIL_INPUT,
+  BASIC_SECTION,
 }
 
 export interface FormComponent {
@@ -24,4 +26,8 @@ export interface FormComponent {
 export const InputSelectionList: ConstructorOfATypedSvelteComponent[] = [
   PlainTextInputListTile,
   EmailInputListTile,
+];
+
+export const SectionSelectionList: ConstructorOfATypedSvelteComponent[] = [
+  BasicSectionSelectionTile,
 ];
