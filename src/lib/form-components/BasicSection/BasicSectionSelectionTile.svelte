@@ -12,6 +12,7 @@
       index: $formStore.formComponents.length,
       settings: { sectionTitle },
       type: FormComponentType.BASIC_SECTION,
+      inputs: []
     });
 
     reset();
