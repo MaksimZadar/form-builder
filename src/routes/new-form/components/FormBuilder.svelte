@@ -12,7 +12,6 @@
     import { flip } from 'svelte/animate';
     import DropIntoSection from './DropIntoSection.svelte';
     import DropSection from './DropSection.svelte';
-    import FormComponentListTile from '$lib/custom-components/FormComponentListTile/FormComponentListTile.svelte';
 
     let formComponentList: FormComponent[] = [];
 
