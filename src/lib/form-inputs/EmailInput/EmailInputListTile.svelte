@@ -13,7 +13,6 @@
   function addComponent(): boolean {
     formStore.addFormComponent({
       id: crypto.randomUUID(),
-      index: $formStore.formComponents.length,
       type: FormComponentType.EMAIL_INPUT,
       settings: { label, placeholder, isRequired },
     });

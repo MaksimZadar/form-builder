@@ -16,7 +16,6 @@ export enum FormComponentType {
 
 export interface FormComponent {
   id: string;
-  index: number;
   type: FormComponentType;
   settings: object;
   sectionId?: string;
