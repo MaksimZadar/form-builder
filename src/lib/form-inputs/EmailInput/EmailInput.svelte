@@ -3,14 +3,14 @@
 
   export let label;
   export let placeholder: string = "";
-  export let isRequired: boolean = false;
+  export let isOptional: boolean = false;
 </script>
 
 <div class="w-full">
   <TextInput
     type="email"
-    labelText={`${label}${isRequired ? " *" : ""}`}
+    labelText={`${label}${isOptional ? " (optional)" : ""}`}
     {placeholder}
-    required={isRequired}
+    required={!isOptional}
   />
 </div>

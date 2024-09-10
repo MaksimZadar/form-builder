@@ -6,7 +6,7 @@
 
   let label = "";
   let placeholder = "";
-  let isRequired = false;
+  let isOptional = false;
 
   let labelInvalid = false;
 
@@ -14,7 +14,7 @@
     formStore.addFormComponent({
       id: crypto.randomUUID(),
       type: FormComponentType.SIMPLE_INPUT,
-      settings: { label, placeholder, isRequired },
+      settings: { label, placeholder, isOptional: isOptional },
     });
 
     reset();
@@ -24,7 +24,7 @@
   function reset() {
     label = "";
     placeholder = "";
-    isRequired = false;
+    isOptional = false;
 
     labelInvalid = false;
   }
@@ -48,6 +48,6 @@
       labelText="Placeholder"
       helperText="Placeholder for the field"
     />
-    <Checkbox bind:checked={isRequired} labelText="Is required?" />
+    <Checkbox bind:checked={isOptional} labelText="Is optional?" />
   </div>
 </FormComponentListTile>

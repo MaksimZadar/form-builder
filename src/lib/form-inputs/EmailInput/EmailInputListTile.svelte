@@ -6,15 +6,13 @@
 
   let label = "";
   let placeholder = "";
-  let isRequired = false;
-
-  let labelInvalid = false;
+  let isOptional = false;
 
   function addComponent(): boolean {
     formStore.addFormComponent({
       id: crypto.randomUUID(),
       type: FormComponentType.EMAIL_INPUT,
-      settings: { label, placeholder, isRequired },
+      settings: { label, placeholder, isRequired: isOptional },
     });
 
     reset();
@@ -24,9 +22,7 @@
   function reset() {
     label = "";
     placeholder = "";
-    isRequired = false;
-
-    labelInvalid = false;
+    isOptional = false;
   }
 </script>
 
@@ -48,6 +44,6 @@
       labelText="Placeholder"
       helperText="Placeholder for the field"
     />
-    <Checkbox bind:checked={isRequired} labelText="Is required?" />
+    <Checkbox bind:checked={isOptional} labelText="Is optional?" />
   </form>
 </FormComponentListTile>
