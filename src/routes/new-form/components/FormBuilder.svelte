@@ -19,7 +19,11 @@
 
     let isDragging = false;
     let fromIndex: number | null = null;
+    let inSectionFromIndex: number | null = null;
+
     let draggedComponent: FormComponent | undefined = undefined;
+    let inSectionDraggedComponent: FormComponent | undefined = undefined;
+
     let formLogo: string | null = null;
 
     formStore.subscribe((form) => {
@@ -50,8 +54,12 @@
         draggedComponent = formComponentList.find((c) => c.id === formComponentId);
     }
 
-    function dragInSection(itemIndex: number) {
+    function dragInSectionStart(section: FormComponent, itemIndex: number, formComponentId: string) {
       isDragging = true;
+      inSectionFromIndex = itemIndex;
+      inSectionDraggedComponent = section.inputs?.find((c) => c.id === formComponentId);
+
+      console.log(inSectionDraggedComponent);
     }
 
     function drop(
@@ -66,6 +74,23 @@
 
         isDragging = false;
         fromIndex = null;
+    }
+
+    function dropInSection(
+        event: DragEvent & { currentTarget: EventTarget & HTMLDivElement },
+        section: FormComponent,
+        toIndex: number,
+    ) {
+        event.preventDefault();
+        console.log(section, inSectionDraggedComponent, toIndex);
+
+        if (inSectionFromIndex !== null && inSectionDraggedComponent !== undefined) {
+            formStore.moveWithinSection(section, inSectionDraggedComponent, toIndex);
+        }
+
+        isDragging = false;
+        inSectionFromIndex = null;
+        inSectionDraggedComponent = undefined;
     }
 
     function addToSection(
@@ -193,11 +218,11 @@
                             {#if isComponentASection(formComponent.type) && formComponent.inputs && formComponent.inputs.length > 0}
                                 {#each formComponent.inputs as sectionInput, sectionInputIndex (sectionInput.id)}
                                     <div animate:flip={{ duration: 400 }}>
-                                        {#if isDragging && fromIndex !== null && fromIndex > sectionInputIndex}
+                                        {#if isDragging && inSectionFromIndex !== null && inSectionFromIndex > sectionInputIndex}
                                             <DropSection
                                                 index={sectionInputIndex}
                                                 drop={(event) =>
-                                                    drop(event, sectionInputIndex)}
+                                                    dropInSection(event, formComponent, sectionInputIndex)}
                                             />
                                         {/if}
                                         <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -206,7 +231,7 @@
                                             draggable="true"
                                             aria-grabbed="false"
                                             on:dragstart={() =>
-                                                dragInSection(sectionInputIndex)}
+                                                dragInSectionStart(formComponent, sectionInputIndex, sectionInput.id)}
                                             on:dragend={() =>
                                                 (isDragging = false)}
                                         >
@@ -234,11 +259,11 @@
                                                     removeSectionComponent(formComponent, sectionInput)}
                                             />
                                         </div>
-                                        {#if isDragging && fromIndex !== null && fromIndex < sectionInputIndex}
+                                        {#if isDragging && inSectionFromIndex !== null && inSectionFromIndex < sectionInputIndex}
                                             <DropSection
                                                 index={sectionInputIndex}
                                                 drop={(event) =>
-                                                    drop(event, sectionInputIndex)}
+                                                    dropInSection(event, formComponent, sectionInputIndex)}
                                             />
                                         {/if}
                                     </div>

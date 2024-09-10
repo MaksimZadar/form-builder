@@ -55,6 +55,37 @@ function createFormStore() {
         return form;
       });
     },
+    moveWithinSection: (section: FormComponent, component: FormComponent, toIndex: number) => {
+      update((form) => {
+        const foundSection = form.formComponents.find(
+          (c) => c.id === section.id
+        );
+
+        if (!foundSection || !isComponentASection(foundSection.type) || !foundSection.inputs) {
+          return form;
+        }
+
+        const movedComponent = foundSection.inputs.find(
+          (c) => c.id === component.id
+        );
+
+        if (!movedComponent) {
+          return form;
+        }
+
+        foundSection.inputs = foundSection.inputs.filter(
+          (c) => c.id !== component.id
+        );
+
+        foundSection.inputs = [
+          ...foundSection.inputs.slice(0, toIndex),
+          movedComponent,
+          ...foundSection.inputs.slice(toIndex),
+        ];
+
+        return form;
+      })
+    },
     moveFormComponent: (component: FormComponent, toIndex: number) => {
       update((form) => {
         const fromItem = form.formComponents.find(
