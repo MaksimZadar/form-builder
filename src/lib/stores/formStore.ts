@@ -1,8 +1,18 @@
 import {
+  FormComponentType,
   type FormComponent,
   type FormData,
 } from "$lib/form-components/FormComponentType";
 import { writable } from "svelte/store";
+
+  function isComponentASection(componentType: FormComponentType) {
+    switch (componentType) {
+      case FormComponentType.BASIC_SECTION:
+        return true;
+      default:
+        return false;
+    }
+  }
 
 function createFormStore() {
   const { subscribe, set, update } = writable<FormData>({
@@ -24,32 +34,80 @@ function createFormStore() {
         formComponents: [...form.formComponents, formComponent],
       }));
     },
-    removeFormComponent: (index: number) => {
+    removeFormComponent: (id: string) => {
       update((form) => ({
         ...form,
-        formComponents: form.formComponents.filter((_, i) => i !== index),
+        formComponents: form.formComponents.filter((c) => c.id !== id),
       }));
     },
-    moveFormComponent: (fromIndex: number, toIndex: number) => {
+    removeSectionInput: (section: FormComponent, input: FormComponent) => {
       update((form) => {
-        const fromItem = form.formComponents[fromIndex];
-        form.formComponents = form.formComponents.filter(
-          (_, i) => i !== fromIndex
+        const foundSection = form.formComponents.find(
+          (component) => component.id === section?.id
         );
 
-        const newFormComponentsList = [
-          ...form.formComponents.slice(0, toIndex),
-          fromItem,
-          ...form.formComponents.slice(toIndex),
-        ];
+        if (!foundSection || !isComponentASection(foundSection.type)) {
+          return form;
+        }
 
-        newFormComponentsList.forEach((input, index) => {
-          input.index = index;
-        });
+        foundSection.inputs = foundSection.inputs?.filter((c) => c.id !== input.id);
+
+        return form;
+      });
+    },
+    moveFormComponent: (component: FormComponent, toIndex: number) => {
+      update((form) => {
+        const fromItem = form.formComponents.find(
+          (c) => c.id === component.id
+        );
+        
+        if (!fromItem) {
+          return form;
+        }
+
+        form.formComponents = form.formComponents.filter(
+          (c) => c.id !== component.id
+        );
 
         return {
           ...form,
-          formComponents: newFormComponentsList,
+          formComponents: [
+            ...form.formComponents.slice(0, toIndex),
+            fromItem,
+            ...form.formComponents.slice(toIndex),
+          ],
+        };
+      });
+    },
+    addToSection: (component: FormComponent, section: FormComponent) => {
+      update((form) => {
+        const movedComponent = form.formComponents.find(
+          (c) => c.id === component.id
+        );
+        const foundSection = form.formComponents.find(
+          (c) => c.id === section?.id
+        );
+
+        if (!movedComponent || !foundSection) {
+          return form;
+        }
+
+        if (!isComponentASection(foundSection.type)) {
+          return form;
+        }
+
+        // Add component to section
+        movedComponent.sectionId = section.id;
+        section.inputs?.push(movedComponent);
+
+        // Remove component from form
+        form.formComponents = form.formComponents.filter(
+          (c) => c.id !== movedComponent.id
+        );
+
+        return {
+          ...form,
+          formComponents: form.formComponents,
         };
       });
     },
