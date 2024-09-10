@@ -12,7 +12,7 @@
     formStore.addFormComponent({
       id: crypto.randomUUID(),
       type: FormComponentType.EMAIL_INPUT,
-      settings: { label, placeholder, isRequired: isOptional },
+      settings: { label, placeholder, isOptional },
     });
 
     reset();
