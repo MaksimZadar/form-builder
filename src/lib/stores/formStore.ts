@@ -145,6 +145,37 @@ function createFormStore() {
     updateLogo: (newLogo: File | null) => {
       update((form) => ({ ...form, logo: newLogo }));
     },
+    updateFormComponent: (componentId: string, newSettings: object) => {
+      update((form) => {
+        let foundFormComponent = form.formComponents.find(
+          (c) => c.id === componentId
+        );
+
+        if (!foundFormComponent) {
+          form.formComponents.forEach(element => {
+            if (!isComponentASection(element.type)) {
+              return;
+            }
+
+            foundFormComponent = element.inputs?.find(
+              (c) => c.id === componentId
+            )
+          });
+        }
+
+        if (!foundFormComponent) {
+          return form;
+        }
+
+        foundFormComponent.settings = newSettings;
+
+        return {
+          ...form,
+          formComponents: form.formComponents,
+        };
+        
+      });
+    }
   };
 }
 

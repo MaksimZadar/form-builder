@@ -4,6 +4,7 @@
   export let label;
   export let placeholder: string = "";
   export let isOptional: boolean = false;
+  export let disabled = false;
 </script>
 
 <div class="w-full">
@@ -12,5 +13,6 @@
     labelText={`${label}${isOptional ? " (optional)" : ""}`}
     {placeholder}
     required={!isOptional}
+    {disabled}
   />
 </div>
